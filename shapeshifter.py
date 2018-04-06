@@ -105,7 +105,7 @@ class ShapeShifterSearchProblem(search.SearchProblem):
                     for m in range(piecewidth):
                         newmap[n + j][m + i] = (newmap[n + j][m + i] + piece[n][m]) % numranks
                 newmap = tuple([tuple(row) for row in newmap])
-                successors.append(((tuple(piecesleft[1:]), newmap), (i,j), 1))
+                successors.append(((tuple(piecesleft[1:]), newmap), (i,j), 0))
 
         self._expanded += 1
         #print 'successors =',successors
@@ -145,13 +145,51 @@ def shapeshifterHeuristic(state, problem):
     """
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
-    if sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap) < 2:
+    #if sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap) < 2:
+    #    print('gamemap =',gamemap)
+
+    topleftcorner = gamemap[0][0]
+    toprightcorner = gamemap[0][len(gamemap)-1]
+    bottomleftcorner = gamemap[len(gamemap)-1][0]
+    bottomrightcorner = gamemap[len(gamemap)-1][len(gamemap)-1]
+
+    rotationsum = topleftcorner+toprightcorner+bottomrightcorner+bottomleftcorner
+#    magic = (rotationsum) % (3) - len(piecesleft)
+    magic = (rotationsum) - len(piecesleft)
+
+    
+    #return (magic);
+
+    htotal = 0
+
+
+    #3 = 44198
+    #6 = 39248
+    #7 = 13691
+    #8 = 39444
+    #9 = 47419
+    if (len(piecesleft) > 7): #you can only rotate the four corners up to 2 times, so anything greater defeats this precision
+        for x in gamemap:
+            for y in x:
+                #htotal = htotal + bool(y != problem.goal_rank)
+                htotal = (htotal + y) #the more rotations the further away
+    else:
+        for x in gamemap:
+            for y in x:
+                htotal = htotal + bool(y != problem.goal_rank) #the more rotations, the less of a difference
+                #htotal = (htotal + y)
+
+    # htotal = htotal + bool(topleftcorner != problem.goal_rank) + len(piecesleft)
+    # htotal = htotal + bool(toprightcorner != problem.goal_rank) + len(piecesleft)
+    # htotal = htotal + bool(bottomleftcorner != problem.goal_rank) + len(piecesleft)
+    # htotal = htotal + bool(bottomrightcorner != problem.goal_rank) + len(piecesleft)
+
+    if (htotal) < 4:
         print('gamemap =',gamemap)
 
-    return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
+    return htotal
+    #return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
     #return sum(sum([bool(y != problem.goal_rank) for y in x]) for x in gamemap)
-
-
 
 
 #SHAPESHIFTER_DATA = ((2,1,0,0),(2,1,0,0),(0,0,2,0),(2,1,2,2)) OLD
@@ -234,24 +272,24 @@ if __name__ == "__main__":
     import shapeshifter_html
     gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config()
 
-    # pieces = (
-    #           ((3,3), ((0,1,1,0),(0,1,1,0),(1,1,0,0),(0,0,0,0))),
-    #           ((2,2), ((1,1,0,0),(1,1,0,0),(0,0,0,0),(0,0,0,0))),
-    #           ((3,3), ((1,0,1,0),(1,0,1,0),(1,1,1,0),(0,0,0,0))),
-    #           ((3,3), ((1,0,0,0),(1,1,1,0),(0,0,1,0),(0,0,0,0))),
-    #           ((2,2), ((1,0,0,0),(1,1,0,0),(0,0,0,0),(0,0,0,0))),
-    #           ((2,3), ((1,1,0,0),(0,1,0,0),(1,1,0,0),(0,0,0,0))),
-    #           ((3,3), ((1, 1, 0, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
-    #           ((3, 2), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-    #           ((3, 3), ((1, 0, 1, 0), (1, 1, 1, 0), (1, 0, 1, 0), (0, 0, 0, 0))),
-    #           ((2, 1), ((1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-    #           ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
-    # )
-    # gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
+    pieces = (
+              ((3,3), ((0,1,1,0),(0,1,1,0),(1,1,0,0),(0,0,0,0))),
+              ((2,2), ((1,1,0,0),(1,1,0,0),(0,0,0,0),(0,0,0,0))),
+              ((3,3), ((1,0,1,0),(1,0,1,0),(1,1,1,0),(0,0,0,0))),
+              ((3,3), ((1,0,0,0),(1,1,1,0),(0,0,1,0),(0,0,0,0))),
+              ((2,2), ((1,0,0,0),(1,1,0,0),(0,0,0,0),(0,0,0,0))),
+              ((2,3), ((1,1,0,0),(0,1,0,0),(1,1,0,0),(0,0,0,0))),
+              ((3,3), ((1, 1, 0, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+              ((3, 2), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+              ((3, 3), ((1, 0, 1, 0), (1, 1, 1, 0), (1, 0, 1, 0), (0, 0, 0, 0))),
+              ((2, 1), ((1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+              ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
+    )
+    gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
     # path = [(0, 1), (0, 1), (0, 0), (0, 0), (0, 0), (0, 1), (0, 1), (0, 1), (0, 0), (1, 0), (0, 0)]
     startState = (pieces, gamemap)
     print('__main__: startState =',startState)
-    problem = ShapeShifterSearchProblem(startState, numranks=3, cycle=[1,2,0]) # speed does NOT seem to be a py3 vs py2 problem
+    problem = ShapeShifterSearchProblem(startState, numranks=3, cycle=[2,1,0]) # speed does NOT seem to be a py3 vs py2 problem
     path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic)
     print('path =',path)
     print(problem._expanded, "nodes expanded")
