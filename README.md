@@ -1,5 +1,5 @@
 # ShapeshifterHtml
-Attempt to create a good machine learning search algorithm to solve Neopet's Shapeshifter Game.
+Attempt to create a good search algorithm to solve Neopet's Shapeshifter Game.
 
 The goal is to use all the rotation pieces to make the entire board the goal picture.
 
