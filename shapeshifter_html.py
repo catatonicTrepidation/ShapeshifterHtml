@@ -12,7 +12,7 @@ def get_shapeshifter_config():
 
 
     read_data = ""
-    with open('raw_html.txt') as f:
+    with open('raw_html.txt', encoding="utf8") as f:
          read_data = f.read()
     soup = BeautifulSoup(read_data, 'html.parser')
 
