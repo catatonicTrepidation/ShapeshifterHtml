@@ -22,7 +22,7 @@ def get_shapeshifter_config():
 
     for i in range(0,5,2):
         pieces_to_ints[cycle_images[i]] = i//2
-    print(pieces_to_ints)
+    #print(pieces_to_ints)
 
     cycle = [pieces_to_ints[cycle_images[i]] for i in range(len(img_indices)) if i%2 == 0 and i < 5]
 
@@ -104,6 +104,7 @@ def test_shapeshifter_html():
     print("Board: ")
     for row in board:
         print(row)
+    print("Original, ", board)
     print()
 
     #Gets Pieces
@@ -114,7 +115,9 @@ def test_shapeshifter_html():
             print(row);
         print();
         count=count+1;
+    print("Original, ", pieces)
+    print()
     print("Cycle: ", cycle)
 
 #test this file
-get_shapeshifter_config()
+test_shapeshifter_html()
