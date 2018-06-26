@@ -1,5 +1,5 @@
 # ShapeshifterHtml
-Attempt to create a good machine learning search algorithm to solve Neopet's Shapeshifter Game.
+Attempt to create a good search algorithm to solve Neopet's Shapeshifter Game.
 
 The goal is to use all the rotation pieces to make the entire board the goal picture.
 
@@ -7,6 +7,17 @@ The goal is to use all the rotation pieces to make the entire board the goal pic
 
 Example of the hardest level:
 https://www.youtube.com/watch?v=M0fklfvPfAQ
+
+Playing it yourself:
+http://www.neopets.com/games/game.phtml?game_id=151
+
+You can use my account:
+
+username: shapeshiftersolver
+
+password: algorithm123
+
+## How to Use
 
 ## HTML Parser
 We are fetching the board through html parsing, and saving it to a txt file
