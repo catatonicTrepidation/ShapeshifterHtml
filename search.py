@@ -2,6 +2,8 @@
 # Original Pacman Search Project found @
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
 
+# Astar is the only algorithm used in shapeshifter
+# None of the other general search algorithms are used
 import util
 
 class SearchProblem:
@@ -47,7 +49,6 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first
@@ -86,7 +87,6 @@ def breadthFirstSearch(problem):
     """
     Search the shallowest nodes in the search tree first.
     """
-    "*** YOUR CODE HERE ***"
     startstate = problem.getStartState()
     #print('search.py: startstate =',startstate)
     sol = []
@@ -131,20 +131,39 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
-    "*** YOUR CODE HERE ***"
-    startstate = problem.getStartState()
-    frontier = util.PriorityQueue()
-    frontier.push((startstate,[]), heuristic(startstate, problem))
-    explored = set()
-    while not frontier.isEmpty():
-        parentstate, prevactions = frontier.pop()
-        if problem.isGoalState(parentstate):
-            return prevactions
-        if parentstate not in explored:
-            explored.add(parentstate)
-            for childstate, action, cost in problem.getSuccessors(parentstate):
-                frontier.push((childstate, prevactions + [action]), problem.getCostOfActions(prevactions + [action]) + heuristic(childstate, problem))
-    return []
+
+    solution = []
+    listToFetch = util.PriorityQueue()
+    listToFetch.push((problem.getStartState(), solution), 0)
+    # print "Cost: ", problem.getCostOfActions(solution);
+
+    # visited states backed by set
+    visitedStates = set()
+
+    while not listToFetch.isEmpty():
+        state, path = listToFetch.pop()
+
+        # register in visited spots
+        if state not in visitedStates:
+            visitedStates.add(state)
+
+            solution = path
+            # explore if not in visited states
+            # print "visited", visitedStates
+
+
+            # i[] = (coordinate, direction, stepCost)
+
+            if (problem.isGoalState(state)):
+                # print "final sol1: ", solution;
+                return solution
+
+            newSet = problem.getSuccessors(state)
+            for currentstate, step, cost in newSet:
+                if currentstate not in visitedStates:
+
+                    listToFetch.push((currentstate, solution + [step]),
+                                     problem.getCostOfActions(solution) + cost + heuristic(currentstate, problem=problem))
 
 
 # Abbreviations
