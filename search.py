@@ -1,22 +1,6 @@
 # search.py
-# ---------
-# Licensing Information:  You are free to use or extend these projects for 
-# educational purposes provided that (1) you do not distribute or publish 
-# solutions, (2) you retain this notice, and (3) you provide clear 
-# attribution to UC Berkeley, including a link to 
+# Original Pacman Search Project found @
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
-# 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero 
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and 
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
-
-
-"""
-In search.py, you will implement generic search algorithms which are called
-by Pacman agents (in searchAgents.py).
-"""
 
 import util
 
@@ -64,28 +48,6 @@ class SearchProblem:
         util.raiseNotDefined()
 
 
-def tinyMazeSearch(problem):
-    """
-    Returns a sequence of moves that solves tinyMaze.  For any other
-    maze, the sequence of moves will be incorrect, so only use this for tinyMaze
-    """
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
-    return  [s,s,w,s,w,w,s,w]
-
-def backtrack(actions, node):
-    res = []
-    print('actions =',actions)
-    while node != None:
-        #print('node =',node)
-        res = [node[1]] + res
-        node = actions[node[0]]
-    print('res =',res)
-    return res
-
-
-
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first
@@ -119,8 +81,6 @@ def depthFirstSearch(problem):
                 frontier.push(childstate)
                 actions[childstate] = actions[parentstate] + [action]
     return []
-
-#util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """
