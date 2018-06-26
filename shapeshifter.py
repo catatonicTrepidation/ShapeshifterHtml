@@ -1,14 +1,10 @@
 # Original Code: Pacman search code from
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
-
-
 import search
-
 
 class ShapeShifterSearchProblem(search.SearchProblem):
     """
       Implementation of a SearchProblem for the  ShapeShifter Puzzle domain
-
       Each state is represented by an instance of an eightPuzzle.
     """
     def __init__(self,startState,numranks,cycle):
@@ -74,35 +70,20 @@ class ShapeShifterSearchProblem(search.SearchProblem):
 
     def getCostOfActions(self, actions):
         """
-        Returns the cost of a particular sequence of actions.  If those actions
-        include an illegal move, return 999999
+        Returns the cost of a particular sequence of actions.
+        This is how the heuristic costs are implemented.
+        If those actions include an illegal move, return a hefty number.
         """
         return len(actions)
 
 def shapeshifterHeuristic(state, problem):
     """
-    Your heuristic for the ShapeShifterSearchProblem goes here.
-
-    This heuristic must be consistent to ensure correctness.  First, try to come up
-    with an admissible heuristic; almost all admissible heuristics will be consistent
-    as well.
-
     If using A* ever finds a solution that is worse uniform cost search finds,
     your heuristic is *not* consistent, and probably not admissible!  On the other hand,
     inadmissible or inconsistent heuristics may find optimal solutions, so be careful.
 
-    The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a
-    Grid (see game.py) of either True or False. You can call foodGrid.asList()
-    to get a list of food coordinates instead.
-
-    If you want access to info like walls, capsules, etc., you can query the problem.
-    For example, problem.walls gives you a Grid of where the walls are.
-
     If you want to *store* information to be reused in other calls to the heuristic,
-    there is a dictionary called problem.heuristicInfo that you can use. For example,
-    if you only want to count the walls once and store that value, try:
-      problem.heuristicInfo['wallCount'] = problem.walls.count()
-    Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
+    there is a dictionary called problem.heuristicInfo that you can use.
     """
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
