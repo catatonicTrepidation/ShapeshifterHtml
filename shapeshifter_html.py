@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+
 def get_shapeshifter_config():
 
     pieces_to_ints = dict()
@@ -10,13 +11,10 @@ def get_shapeshifter_config():
     pieces_to_ints['swo_0'] = 0
     pieces_to_ints['cro_0'] = 0
 
-
-    read_data = ""
+    #HTML LEVEL GOES HERE:
     with open('htmllevels/defaultlevel.txt', encoding="utf8") as f:
-         read_data = f.read()
+        read_data = f.read()
     soup = BeautifulSoup(read_data, 'html.parser')
-
-
 
     cycle_images = soup.select('#content > table > tbody > tr > td.content > center:nth-of-type(2) > table > tbody > tr > td > table > tbody > tr')[0]
     img_indices = [m.start() for m in re.finditer('.gif', str(cycle_images))]
@@ -87,6 +85,7 @@ def get_shapeshifter_config():
     print()
     print('---------')
     print()
+
     for shape in shapes:
         cur_piece = []
         cp_dim = [0,0]
@@ -103,15 +102,36 @@ def get_shapeshifter_config():
             cur_row.extend((0,)*(BOARD_DIMENSIONS - len(cur_row)))
             cur_piece.append(tuple(cur_row))
         cp_dim[1] = max(cp_dim[1], len(cur_piece))
-        cur_piece.extend([(0,)*BOARD_DIMENSIONS for _ in range(BOARD_DIMENSIONS - len(cur_piece))])  # add empty row(s)
+
+        # add empty row(s)
+        cur_piece.extend([(0,)*BOARD_DIMENSIONS for _ in range(BOARD_DIMENSIONS - len(cur_piece))])
 
         final_pieces.append(tuple((cp_dim, cur_piece)))
 
     final_pieces = tuple(tuple(tuple(row) for row in piece) for piece in final_pieces)
 
-    print('FINAL PIECES  ::: ', final_pieces)
-    print()
 
     return board, final_pieces, cycle
 
-#get_shapeshifter_config()
+
+def test_shapeshifter_html():
+    board, pieces, cycle = get_shapeshifter_config();
+
+    #Print Board
+    print("Board: ")
+    for row in board:
+        print(row)
+    print()
+
+    #Gets Pieces
+    count = 1;
+    for sizenxn,board in pieces:
+        print("piece ", count, ":")
+        for row in board:
+            print(row);
+        print();
+        count=count+1;
+    print("Cycle: ", cycle)
+
+#test this file
+test_shapeshifter_html()
