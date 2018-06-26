@@ -29,7 +29,6 @@ def get_shapeshifter_config():
 
     board_html = soup.select('#content > table > tbody > tr > td.content > table > tbody tr')
 
-
     board = []
 
     for row in board_html:
@@ -37,21 +36,8 @@ def get_shapeshifter_config():
         board.append(tuple(pieces_to_ints[str(row)[idx-5:idx]] for idx in img_indices))
 
     board = tuple(board)
-    print()
-    print('board =',board)
-
-
-
-
-    print()
-    print('---------')
-    print()
-    print('cycle =',cycle)
 
     #need to get ACTIVE SHAPE separately
-
-
-
 
     BOARD_DIMENSIONS = 4
     final_pieces = []
@@ -82,9 +68,6 @@ def get_shapeshifter_config():
 
     shapes = soup.select('#content > table > tbody > tr > td.content > center:nth-of-type(3) > center > table > tbody > tr > td')
 
-    print()
-    print('---------')
-    print()
 
     for shape in shapes:
         cur_piece = []
@@ -134,4 +117,4 @@ def test_shapeshifter_html():
     print("Cycle: ", cycle)
 
 #test this file
-test_shapeshifter_html()
+get_shapeshifter_config()

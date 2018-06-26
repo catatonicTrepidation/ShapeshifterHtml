@@ -1,6 +1,8 @@
 # Original Code: Pacman search code from
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
 import search
+import re
+from ast import literal_eval
 
 class ShapeShifterSearchProblem(search.SearchProblem):
     """
@@ -26,7 +28,7 @@ class ShapeShifterSearchProblem(search.SearchProblem):
             for c in row:
                 if c != self.goal_rank:
                     return False
-        print('len(state[0]) == 0 is', len(state[0]) == 0)
+
         return len(state[0]) == 0
 
     def getSuccessors(self, state):
@@ -126,6 +128,8 @@ def shapeshifterHeuristic(state, problem):
     # htotal = htotal + bool(bottomleftcorner != problem.goal_rank) + len(piecesleft)
     # htotal = htotal + bool(bottomrightcorner != problem.goal_rank) + len(piecesleft)
 
+
+    #print out every time there is a super close solutions
     if (htotal) < 4:
         print('gamemap =',gamemap)
 
@@ -202,15 +206,7 @@ if __name__ == "__main__":
     #     ((3, 3), ((1, 0, 1, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0))),  # Y
     # )
 
-    # pieces = (
-    #     ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
-    #     ((2, 2), ((1, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-    #     ((3, 3), ((1, 0, 1, 0), (1, 0, 1, 0), (1, 1, 1, 0), (0, 0, 0, 0))),
-    #     ((3, 3), ((1, 0, 0, 0), (1, 1, 1, 0), (0, 0, 1, 0), (0, 0, 0, 0))),
-    #     ((2, 2), ((1, 0, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-    #     ((2, 3), ((1, 1, 0, 0), (0, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
-    #     ((3, 2), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-    # )
+
     import shapeshifter_html
     gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config()
 
@@ -227,12 +223,21 @@ if __name__ == "__main__":
               ((2, 1), ((1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
               ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
     )
+
+    #***Attempted Imported Array Level ***#
+    with open('arraylevels/default1.txt', encoding="utf8") as f:
+        read_data = f.readlines()
+    for lines in read_data:
+        read_data = lines.strip()
+    # pieces = literal_eval("read_data")
+    #-------------------------------------#
+
     gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
     path = [(0, 1), (0, 1), (0, 0), (0, 0), (0, 0), (0, 1), (0, 1), (0, 1), (0, 0), (1, 0), (0, 0)]
     startState = (pieces, gamemap)
     print('__main__: startState =',startState)
-    problem = ShapeShifterSearchProblem(startState, numranks=3, cycle=[2,1,0]) # speed does NOT seem to be a py3 vs py2 problem
+    problem = ShapeShifterSearchProblem(startState, numranks=3, cycle=[2,1,0])
+
     path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic)
     print('path =',path)
     print(problem._expanded, "nodes expanded")
-
