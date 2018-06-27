@@ -78,29 +78,20 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         """
         return len(actions)
 
+
 # lower costs the closer it is to the solution
 def shapeshifterHeuristic1(state, problem):
-    return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
-    # return sum(sum([bool(y != problem.goal_rank) for y in x]) for x in gamemap)
+    # return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
+    return sum(sum([bool(y != problem.goal_rank) for y in x]) for x in gamemap)
 
-# see how close it is to the mod of the total number of state + corne heuristic
+# see how close it is to the mod of the total number of state
+# TODO: 7 is hard coded due to 4 corners and 3 states. Should fix this in future
 def shapeshifterHeuristic2(state, problem):
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
     #if sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap) < 2:
     #    print('gamemap =',gamemap)
 
-    topleftcorner = gamemap[0][0]
-    toprightcorner = gamemap[0][len(gamemap)-1]
-    bottomleftcorner = gamemap[len(gamemap)-1][0]
-    bottomrightcorner = gamemap[len(gamemap)-1][len(gamemap)-1]
-
-    rotationsum = topleftcorner+toprightcorner+bottomrightcorner+bottomleftcorner
-#    magic = (rotationsum) % (3) - len(piecesleft)
-    magic = (rotationsum) - len(piecesleft)
-
-
-    #return (magic);
 
     htotal = 0
 
@@ -110,7 +101,8 @@ def shapeshifterHeuristic2(state, problem):
     #7 = 13691
     #8 = 39444
     #9 = 47419
-    if (len(piecesleft) > 7): #you can only rotate the four corners up to 2 times, so anything greater defeats this precision
+    if (len(piecesleft) > 7):
+    #you can only rotate the four corners up to 2 times, so anything greater defeats this precision
         for x in gamemap:
             for y in x:
                 #htotal = htotal + bool(y != problem.goal_rank)
@@ -118,14 +110,14 @@ def shapeshifterHeuristic2(state, problem):
     else:
         for x in gamemap:
             for y in x:
-                htotal = htotal + bool(y != problem.goal_rank) #the more rotations, the less of a difference
-                #htotal = (htotal + y)
+                htotal = htotal + bool(y != problem.goal_rank)
+                #the more rotations, the less of a difference
 
+    # htotal = (htotal + y)
     # htotal = htotal + bool(topleftcorner != problem.goal_rank) + len(piecesleft)
     # htotal = htotal + bool(toprightcorner != problem.goal_rank) + len(piecesleft)
     # htotal = htotal + bool(bottomleftcorner != problem.goal_rank) + len(piecesleft)
     # htotal = htotal + bool(bottomrightcorner != problem.goal_rank) + len(piecesleft)
-
 
     #print out every time there is a super close solutions
     if (htotal) < 2:
@@ -133,6 +125,17 @@ def shapeshifterHeuristic2(state, problem):
 
     return htotal
 
+# attempted corner heuristic (doesn't work)
+def shapeshifterHeuristic3(state, problem):
+    topleftcorner = gamemap[0][0]
+    toprightcorner = gamemap[0][len(gamemap) - 1]
+    bottomleftcorner = gamemap[len(gamemap) - 1][0]
+    bottomrightcorner = gamemap[len(gamemap) - 1][len(gamemap) - 1]
+
+    rotationsum = topleftcorner + toprightcorner + bottomrightcorner + bottomleftcorner
+    #    magic = (rotationsum) % (3) - len(piecesleft)
+    magic = (rotationsum) - len(piecesleft)
+    return magic
 
 
 if __name__ == "__main__":
