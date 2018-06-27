@@ -78,15 +78,13 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         """
         return len(actions)
 
-def shapeshifterHeuristic(state, problem):
-    """
-    If using A* ever finds a solution that is worse uniform cost search finds,
-    your heuristic is *not* consistent, and probably not admissible!  On the other hand,
-    inadmissible or inconsistent heuristics may find optimal solutions, so be careful.
+# lower costs the closer it is to the solution
+def shapeshifterHeuristic1(state, problem):
+    return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
+    # return sum(sum([bool(y != problem.goal_rank) for y in x]) for x in gamemap)
 
-    If you want to *store* information to be reused in other calls to the heuristic,
-    there is a dictionary called problem.heuristicInfo that you can use.
-    """
+# see how close it is to the mod of the total number of state + corne heuristic
+def shapeshifterHeuristic2(state, problem):
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
     #if sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap) < 2:
@@ -130,18 +128,20 @@ def shapeshifterHeuristic(state, problem):
 
 
     #print out every time there is a super close solutions
-    if (htotal) < 4:
+    if (htotal) < 2:
         print('gamemap =',gamemap)
 
     return htotal
-    #return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
-    #return sum(sum([bool(y != problem.goal_rank) for y in x]) for x in gamemap)
+
 
 
 if __name__ == "__main__":
 
     import shapeshifter_html
     gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config()
+    print(gamemap)
+    print(pieces)
+    print(cycle)
 
 
 
@@ -167,13 +167,12 @@ if __name__ == "__main__":
         ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
     )
     gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
-    path = [(0, 1), (0, 1), (0, 0), (0, 0), (0, 0), (0, 1), (0, 1), (0, 1), (0, 0), (1, 0), (0, 0)]
 
     startState = (pieces, gamemap)
     print('__main__: startState =',startState)
 
     #need to modify numranks and the cycle somehow
     problem = ShapeShifterSearchProblem(startState, numranks=3, cycle=[2,1,0])
-    path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic)
+    path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic2)
     print('path =',path)
     print(problem._expanded, "nodes expanded")
