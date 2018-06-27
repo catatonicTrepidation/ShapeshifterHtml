@@ -5,12 +5,7 @@ import re
 from ast import literal_eval
 
 class ShapeShifterSearchProblem(search.SearchProblem):
-    """
-      Implementation of a SearchProblem for the  ShapeShifter Puzzle domain
-      Each state is represented by an instance of an eightPuzzle.
-    """
     def __init__(self,startState,numranks,cycle):
-        "Creates a new EightPuzzleSearchProblem which stores search information."
         self.startState = startState
         self.numranks = numranks
         self._expanded = 0
@@ -33,22 +28,16 @@ class ShapeShifterSearchProblem(search.SearchProblem):
 
     def getSuccessors(self, state):
         """
-        Returns successor states, the actions they require, and a cost of 1.
-
-         As noted in search.py:
-             For a given state, this should return a list of triples,
-         (successor, action, stepCost), where 'successor' is a
-         successor to the current state, 'action' is the action
-         required to get there, and 'stepCost' is the incremental
-         cost of expanding to that successor
+        Return a list of triples: (successor, action, stepCost),
+        'successor' are following states,
+        'action' is the action required to get there
+        'stepCost' is the incremental cost of expanding to that successor
         """
         numranks = self.numranks
         piecesleft, gamemap = state
-        # print('state =',state)
-        # print()
-        # print('piecesleft =',piecesleft)
+
         if len(piecesleft) == 0: return []
-        #print('piecesleft[0] =',piecesleft[0])
+
         piecesleft = list(piecesleft)
         successors = []
         dimensions, piece = piecesleft[0]
@@ -67,7 +56,7 @@ class ShapeShifterSearchProblem(search.SearchProblem):
                 successors.append(((tuple(piecesleft[1:]), newmap), (i,j), 0))
 
         self._expanded += 1
-        #print 'successors =',successors
+
         return successors
 
     def getCostOfActions(self, actions):
@@ -89,9 +78,6 @@ def shapeshifterHeuristic1(state, problem):
 def shapeshifterHeuristic2(state, problem):
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
-    #if sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap) < 2:
-    #    print('gamemap =',gamemap)
-
 
     htotal = 0
 
@@ -127,6 +113,8 @@ def shapeshifterHeuristic2(state, problem):
 
 # attempted corner heuristic (doesn't work)
 def shapeshifterHeuristic3(state, problem):
+    piecesleft, gamemap = state
+
     topleftcorner = gamemap[0][0]
     toprightcorner = gamemap[0][len(gamemap) - 1]
     bottomleftcorner = gamemap[len(gamemap) - 1][0]
@@ -139,14 +127,9 @@ def shapeshifterHeuristic3(state, problem):
 
 
 if __name__ == "__main__":
-
-    import shapeshifter_html
-    gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config()
-    print(gamemap)
-    print(pieces)
-    print(cycle)
-
-
+    #*** Reads html ***#
+    #import shapeshifter_html
+    #gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config()
 
     #***Attempted Imported Array Level ***#
     # with open('arraylevels/default1.txt', encoding="utf8") as f:
