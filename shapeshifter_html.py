@@ -119,5 +119,5 @@ def test_shapeshifter_html():
     print()
     print("Cycle: ", cycle)
 
-#test this file
-test_shapeshifter_html()
+#uncomment to test this file
+#test_shapeshifter_html()
