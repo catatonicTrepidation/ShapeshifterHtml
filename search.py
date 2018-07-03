@@ -1,23 +1,9 @@
 # search.py
-# ---------
-# Licensing Information:  You are free to use or extend these projects for 
-# educational purposes provided that (1) you do not distribute or publish 
-# solutions, (2) you retain this notice, and (3) you provide clear 
-# attribution to UC Berkeley, including a link to 
+# Original Pacman Search Project found @
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
-# 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero 
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and 
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
-
-"""
-In search.py, you will implement generic search algorithms which are called
-by Pacman agents (in searchAgents.py).
-"""
-
+# Astar is the only algorithm used in shapeshifter
+# None of the other general search algorithms are used
 import util
 
 class SearchProblem:
@@ -63,29 +49,6 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-
-def tinyMazeSearch(problem):
-    """
-    Returns a sequence of moves that solves tinyMaze.  For any other
-    maze, the sequence of moves will be incorrect, so only use this for tinyMaze
-    """
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
-    return  [s,s,w,s,w,w,s,w]
-
-def backtrack(actions, node):
-    res = []
-    print('actions =',actions)
-    while node != None:
-        #print('node =',node)
-        res = [node[1]] + res
-        node = actions[node[0]]
-    print('res =',res)
-    return res
-
-
-
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first
@@ -120,13 +83,10 @@ def depthFirstSearch(problem):
                 actions[childstate] = actions[parentstate] + [action]
     return []
 
-#util.raiseNotDefined()
-
 def breadthFirstSearch(problem):
     """
     Search the shallowest nodes in the search tree first.
     """
-    "*** YOUR CODE HERE ***"
     startstate = problem.getStartState()
     #print('search.py: startstate =',startstate)
     sol = []
@@ -171,20 +131,39 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
-    "*** YOUR CODE HERE ***"
-    startstate = problem.getStartState()
-    frontier = util.PriorityQueue()
-    frontier.push((startstate,[]), heuristic(startstate, problem))
-    explored = set()
-    while not frontier.isEmpty():
-        parentstate, prevactions = frontier.pop()
-        if problem.isGoalState(parentstate):
-            return prevactions
-        if parentstate not in explored:
-            explored.add(parentstate)
-            for childstate, action, cost in problem.getSuccessors(parentstate):
-                frontier.push((childstate, prevactions + [action]), problem.getCostOfActions(prevactions + [action]) + heuristic(childstate, problem))
-    return []
+
+    solution = []
+    listToFetch = util.PriorityQueue()
+    listToFetch.push((problem.getStartState(), solution), 0)
+    # print "Cost: ", problem.getCostOfActions(solution);
+
+    # visited states backed by set
+    visitedStates = set()
+
+    while not listToFetch.isEmpty():
+        state, path = listToFetch.pop()
+
+        # register in visited spots
+        if state not in visitedStates:
+            visitedStates.add(state)
+
+            solution = path
+            # explore if not in visited states
+            # print "visited", visitedStates
+
+
+            # i[] = (coordinate, direction, stepCost)
+
+            if (problem.isGoalState(state)):
+                # print "final sol1: ", solution;
+                return solution
+
+            newSet = problem.getSuccessors(state)
+            for currentstate, step, cost in newSet:
+                if currentstate not in visitedStates:
+
+                    listToFetch.push((currentstate, solution + [step]),
+                                     problem.getCostOfActions(solution) + cost + heuristic(currentstate, problem=problem))
 
 
 # Abbreviations
