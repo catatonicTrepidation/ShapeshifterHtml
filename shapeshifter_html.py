@@ -3,7 +3,7 @@ import requests
 import re
 
 
-def get_shapeshifter_config():
+def get_shapeshifter_config(filename):
 
     pieces_to_ints = dict()
     pieces_to_ints['gob_0'] = 0
@@ -12,7 +12,7 @@ def get_shapeshifter_config():
     pieces_to_ints['cro_0'] = 0
 
     #HTML LEVEL GOES HERE:
-    with open('htmllevels/defaultlevel.txt', encoding="utf8") as f:
+    with open(filename, encoding="utf8") as f:
         read_data = f.read()
     soup = BeautifulSoup(read_data, 'html.parser')
 
@@ -71,7 +71,7 @@ def get_shapeshifter_config():
 
     for shape in shapes:
         cur_piece = []
-        cp_dim = [0,0]
+        cp_dim = [0, 0]
         piece_rows = BeautifulSoup(str(shape),'html.parser').findAll('tr', recursive=True)
         for pr in piece_rows:
             cur_row = []
@@ -82,6 +82,8 @@ def get_shapeshifter_config():
                 else:
                     cur_row.append(0)
             cp_dim[0] = max(cp_dim[0], len(cur_row))
+
+            #piece dimensions
             cur_row.extend((0,)*(BOARD_DIMENSIONS - len(cur_row)))
             cur_piece.append(tuple(cur_row))
         cp_dim[1] = max(cp_dim[1], len(cur_piece))
@@ -97,8 +99,8 @@ def get_shapeshifter_config():
     return board, final_pieces, cycle
 
 
-def test_shapeshifter_html():
-    board, pieces, cycle = get_shapeshifter_config();
+def test_shapeshifter_html(filename):
+    board, pieces, cycle = get_shapeshifter_config(filename);
 
     #Print Board
     print("Board: ")
@@ -108,16 +110,18 @@ def test_shapeshifter_html():
     print()
 
     #Gets Pieces
-    count = 1;
+    count = 1
     for sizenxn,board in pieces:
+        print("size: ", sizenxn)
         print("piece ", count, ":")
         for row in board:
-            print(row);
-        print();
-        count=count+1;
+            print(row)
+        print()
+        count = count + 1
+
     print("Original, ", pieces)
     print()
     print("Cycle: ", cycle)
 
 #uncomment to test this file
-#test_shapeshifter_html()
+test_shapeshifter_html('htmllevels/level1.txt')
