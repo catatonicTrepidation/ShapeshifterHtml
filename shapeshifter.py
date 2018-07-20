@@ -1,8 +1,6 @@
 # Original Code: Pacman search code from
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
 import search
-import re
-from ast import literal_eval
 
 class ShapeShifterSearchProblem(search.SearchProblem):
     def __init__(self,startState,numranks,cycle):
@@ -49,11 +47,13 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         for j in range(mapheight - pieceheight + 1):
             for i in range(mapwidth - piecewidth + 1):
                 newmap = [list(row) for row in gamemap]
+
+                #"increment" and rotate the image
                 for n in range(pieceheight):
                     for m in range(piecewidth):
                         newmap[n + j][m + i] = (newmap[n + j][m + i] + piece[n][m]) % numranks
                 newmap = tuple([tuple(row) for row in newmap])
-                successors.append(((tuple(piecesleft[1:]), newmap), (i,j), 0))
+                successors.append(((tuple(piecesleft[1:]), newmap), (i, j), 0))
 
         self._expanded += 1
 
@@ -128,32 +128,26 @@ def shapeshifterHeuristic3(state, problem):
 
 if __name__ == "__main__":
     #*** Reads html ***#
-    #import shapeshifter_html
-    #gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config()
+    import shapeshifter_html
+    gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config('htmllevels/level1.txt')
 
-    #***Attempted Imported Array Level ***#
-    # with open('arraylevels/default1.txt', encoding="utf8") as f:
-    #     read_data = f.readlines()
-    # for lines in read_data:
-    #     read_data = lines.strip()
-    #pieces = literal_eval("read_data")
-    #-------------------------------------#
+    # pieces = (
+    #     ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+    #     ((2, 2), ((1, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+    #     ((3, 3), ((1, 0, 1, 0), (1, 0, 1, 0), (1, 1, 1, 0), (0, 0, 0, 0))),
+    #     ((3, 3), ((1, 0, 0, 0), (1, 1, 1, 0), (0, 0, 1, 0), (0, 0, 0, 0))),
+    #     ((2, 2), ((1, 0, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+    #     ((2, 3), ((1, 1, 0, 0), (0, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+    #     ((3, 3), ((1, 1, 0, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+    #     ((3, 2), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+    #     ((3, 3), ((1, 0, 1, 0), (1, 1, 1, 0), (1, 0, 1, 0), (0, 0, 0, 0))),
+    #     ((2, 1), ((1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+    #     ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
+    # )
+    # gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
+    #
 
-    pieces = (
-        ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
-        ((2, 2), ((1, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-        ((3, 3), ((1, 0, 1, 0), (1, 0, 1, 0), (1, 1, 1, 0), (0, 0, 0, 0))),
-        ((3, 3), ((1, 0, 0, 0), (1, 1, 1, 0), (0, 0, 1, 0), (0, 0, 0, 0))),
-        ((2, 2), ((1, 0, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-        ((2, 3), ((1, 1, 0, 0), (0, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
-        ((3, 3), ((1, 1, 0, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
-        ((3, 2), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-        ((3, 3), ((1, 0, 1, 0), (1, 1, 1, 0), (1, 0, 1, 0), (0, 0, 0, 0))),
-        ((2, 1), ((1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
-        ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
-    )
-    gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
-
+    print(cycle);
     startState = (pieces, gamemap)
     print('__main__: startState =',startState)
 
