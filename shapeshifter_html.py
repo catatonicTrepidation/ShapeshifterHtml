@@ -3,6 +3,28 @@ import requests
 import re
 
 
+def update_dict_and_get_cycle(pieces_to_ints, soup):
+    cycle_images = soup.select(
+        '#content > table > tbody > tr > td.content > center:nth-of-type(2) > table > tbody > tr > td > table > tbody > tr')
+
+    # string format of all the different cycle images
+    picturetypes = str(cycle_images)
+
+    img_indices = [m.start() for m in re.finditer('.gif', picturetypes)]
+
+    # index - 5 because all the picture names are in format xxx_x.gif
+    # skip all odd indexes because they are "arrow.gif"
+    cycle_images = [picturetypes[img_indices[i] - 5:img_indices[i]] for i in range(0, len(img_indices) - 1, 2)]
+    # length-1 because the last pic is the same as the first
+
+    shapecount = 0;
+    for shapepic in cycle_images:
+        pieces_to_ints[shapepic] = shapecount
+        shapecount = shapecount + 1
+    # print(pieces_to_ints)
+    cycle = [pieces_to_ints[cycle_images[i]] for i in range(len(cycle_images))]
+    # print(cycle)
+    return cycle
 def get_shapeshifter_config(filename):
 
     pieces_to_ints = dict()
@@ -16,16 +38,7 @@ def get_shapeshifter_config(filename):
         read_data = f.read()
     soup = BeautifulSoup(read_data, 'html.parser')
 
-    cycle_images = soup.select('#content > table > tbody > tr > td.content > center:nth-of-type(2) > table > tbody > tr > td > table > tbody > tr')[0]
-    img_indices = [m.start() for m in re.finditer('.gif', str(cycle_images))]
-    cycle_images = [str(cycle_images)[img_indices[i]-5:img_indices[i]] for i in range(len(img_indices))]
-
-    for i in range(0,5,2):
-        pieces_to_ints[cycle_images[i]] = i//2
-    #print(pieces_to_ints)
-
-    cycle = [pieces_to_ints[cycle_images[i]] for i in range(len(img_indices)) if i%2 == 0 and i < 5]
-
+    cycle = update_dict_and_get_cycle(pieces_to_ints, soup);
 
     board_html = soup.select('#content > table > tbody > tr > td.content > table > tbody tr')
 
@@ -44,6 +57,7 @@ def get_shapeshifter_config(filename):
 
     #  need to get ACTIVE SHAPE separately
     active_shape_rows = soup.select('#content > table > tbody > tr > td.content > center:nth-of-type(3) > table > tbody > tr > td > table > tbody > tr')
+
     cur_piece = []
     cp_dim = [0, 0]
     for pr in active_shape_rows:
@@ -124,4 +138,5 @@ def test_shapeshifter_html(filename):
     print("Cycle: ", cycle)
 
 #uncomment to test this file
-test_shapeshifter_html('htmllevels/level1.txt')
+test_shapeshifter_html('htmllevels/defaultlevel.txt')
+#get_shapeshifter_config('htmllevels/level1.txt')
