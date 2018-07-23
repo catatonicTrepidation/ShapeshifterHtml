@@ -17,6 +17,8 @@ username: shapeshiftersolver
 
 password: algorithm123
 
+While collecting html puzzles, it occurred to me that the puzzle actually dynamically changes. To replace the puzzle, just inspect the element and select 'edit as html', and save the contents.
+
 ## How to Use
 
 ## HTML Parser
