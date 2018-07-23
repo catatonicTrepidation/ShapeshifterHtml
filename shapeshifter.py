@@ -3,12 +3,12 @@
 import search
 
 class ShapeShifterSearchProblem(search.SearchProblem):
-    def __init__(self,startState,numranks,cycle):
+    def __init__(self,startState,cycle, goal):
         self.startState = startState
-        self.numranks = numranks
+        self.numranks = len(cycle)
         self._expanded = 0
         self.cycle = cycle
-        self.goal_rank = cycle[2]
+        self.goal_rank = goal
 
     def getStartState(self):
         return self.startState
@@ -129,10 +129,10 @@ def shapeshifterHeuristic3(state, problem):
 if __name__ == "__main__":
     #*** Reads html ***#
     import shapeshifter_html
-    #gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config('htmllevels/level1.html')
+    gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level1.html')
 
     #uncomment for hardcoded level
-    #'''
+    '''
     pieces = (
         ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
         ((2, 2), ((1, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
@@ -147,7 +147,9 @@ if __name__ == "__main__":
         ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
     )
     gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
-    #'''
+    cycle = [0,1,2]
+    goalpiece = 0
+    '''
 
 
     startState = (pieces, gamemap)
@@ -155,7 +157,7 @@ if __name__ == "__main__":
     # print('Cycle: ", cycle)
     # print('Start State: ',startState)
 
-    problem = ShapeShifterSearchProblem(startState, numranks=3, cycle=[2,1,0])
+    problem = ShapeShifterSearchProblem(startState, cycle=cycle, goal = goalpiece)
     path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic2)
-    print('path =',path)
+    print('path =', path)
     print(problem._expanded, "nodes expanded")
