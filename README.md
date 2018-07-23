@@ -25,14 +25,28 @@ Open Terminal, or whatever you have python on and run `python shapeshifter.py` o
 ### Using your own levels
 While collecting html puzzles, it occurred to me that the puzzle actually dynamically changes. To replace the puzzle, just inspect the element and select 'edit as html', and save the contents as `something.html`
 
+Example: 
+
+<img src="https://i.imgur.com/hLT7Mgf.png" height="50%" width="50%">
+
+
 Inside shapeshifter.py, you just change the html file listed in
 
 ```gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level4.html')```
 
+## Understanding the code
+
 ### HTML Parser
-We are fetching the board through html parsing, and saving it to a txt file
+We are fetching the board through html parsing, and saving it to a txt file via `shapeshifter_html.py`
 
 ### Search Heuristics
+
+We are using Berkeley AI's skeleton (CS188) for A* search in `search.py` and their Counter for the dictionary in `util.py`.
+
+We originally received the skeleton code from Georgia Tech's CS3600 class and implemented it ourselves. 
+
+For all our heuristics we tested it on the "hard coded" level in `search.py`
+
 #### Heuristic 1: Blind equidistance from goal state
 
 ```
