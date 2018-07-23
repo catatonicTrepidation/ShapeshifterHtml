@@ -96,9 +96,15 @@ def add_active_piece(soup, final_pieces, board_size):
 
 def add_other_shape_pieces(soup, final_pieces, board_size):
     shapes = soup.select(
-        'td.content > center:nth-of-type(3) > center > table > tbody ')
-    print(shapes)
+        'td.content > center:nth-of-type(3) > center');
+    #print(shapes)
 
+    #border="0", cellpadding="0", cellspacing="0"
+    test = soup.find_all(attrs={"border": 0, "cellpadding": 0, "cellspacing": 0})
+
+    # 1st piece is javascript table logic for the game board
+    # 2nd piece is current piece
+    shapes = test[2:]
     print(len(shapes))
     for shape in shapes:
         cur_piece = []
@@ -108,7 +114,7 @@ def add_other_shape_pieces(soup, final_pieces, board_size):
             cur_row = []
             td_list = BeautifulSoup(str(pr), 'html.parser').findAll('td', recursive=True)
             for td in td_list:
-                if 'img' in str(td):
+                if 'img' in str(td) and 'http://images.neopets.com/medieval/shapeshifter/square.gif' in str(td):
                     cur_row.append(1)
                 else:
                     cur_row.append(0)
@@ -146,9 +152,6 @@ def test_shapeshifter_html(filename):
     print("Cycle: ", cycle)
 
 # uncomment to test this file
-test_shapeshifter_html('htmllevels/defaultlevel.txt')
-print('=============================')
-print('=============================')
-print('=============================')
-print('=============================')
-test_shapeshifter_html('htmllevels/level1.txt')
+#test_shapeshifter_html('htmllevels/defaultlevel.html')
+
+#test_shapeshifter_html('htmllevels/level1.html')

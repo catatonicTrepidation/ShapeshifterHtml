@@ -129,7 +129,7 @@ def shapeshifterHeuristic3(state, problem):
 if __name__ == "__main__":
     #*** Reads html ***#
     import shapeshifter_html
-    gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config('htmllevels/level1.txt')
+    gamemap, pieces, cycle = shapeshifter_html.get_shapeshifter_config('htmllevels/level1.html')
 
     # pieces = (
     #     ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
