@@ -21,8 +21,9 @@ def get_shapeshifter_config(filename):
     board_size = len(board)
 
     add_active_piece(soup, final_pieces, board_size)
-    add_other_shape_pieces(soup, final_pieces, board_size)
+    final_pieces = add_other_shape_pieces(soup, final_pieces, board_size)
 
+    #print(final_pieces)
     return board, final_pieces, cycle
 
 
@@ -95,17 +96,13 @@ def add_active_piece(soup, final_pieces, board_size):
 
 
 def add_other_shape_pieces(soup, final_pieces, board_size):
-    shapes = soup.select(
-        'td.content > center:nth-of-type(3) > center');
-    #print(shapes)
-
     #border="0", cellpadding="0", cellspacing="0"
-    test = soup.find_all(attrs={"border": 0, "cellpadding": 0, "cellspacing": 0})
+    tables = soup.find_all(attrs={"border": 0, "cellpadding": 0, "cellspacing": 0})
 
     # 1st piece is javascript table logic for the game board
     # 2nd piece is current piece
-    shapes = test[2:]
-    print(len(shapes))
+    shapes = tables[2:]
+
     for shape in shapes:
         cur_piece = []
         cp_dim = [0, 0]
@@ -130,10 +127,9 @@ def add_other_shape_pieces(soup, final_pieces, board_size):
 
         final_pieces.append(tuple((cp_dim, cur_piece)))
     final_pieces = tuple(tuple(tuple(row) for row in piece) for piece in final_pieces)
-
+    return final_pieces
 def test_shapeshifter_html(filename):
     board, pieces, cycle = get_shapeshifter_config(filename)
-
     #Print Board
     print("Board: ")
     for row in board:
