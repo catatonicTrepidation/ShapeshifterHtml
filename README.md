@@ -1,7 +1,9 @@
 # ShapeshifterHtml
-Attempt to create a good search algorithm to solve Neopet's Shapeshifter Game.
+Using A* to solve Neopet's Shapeshifter Game.
 
 The goal is to use all the rotation pieces to make the entire board the goal picture.
+
+Still looking for better heuristics, and optimizing speed. (It gets pretty slow when the board is large enough)
 
 <img src="https://i.imgur.com/uqD0tvT.png" height="50%" width="50%">
 
