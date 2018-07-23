@@ -129,7 +129,7 @@ def shapeshifterHeuristic3(state, problem):
 if __name__ == "__main__":
     #*** Reads html ***#
     import shapeshifter_html
-    gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level1.html')
+    gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level3.html')
 
     #uncomment for hardcoded level
     '''
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     # print('Cycle: ", cycle)
     # print('Start State: ',startState)
 
-    problem = ShapeShifterSearchProblem(startState, cycle=cycle, goal = goalpiece)
+    problem = ShapeShifterSearchProblem(startState, cycle=cycle, goal=goalpiece)
     path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic2)
-    print('path =', path)
+    print('Path =', path)
     print(problem._expanded, "nodes expanded")
