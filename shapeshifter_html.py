@@ -8,21 +8,20 @@ pieces_to_ints = dict()
 def get_shapeshifter_config(filename):
     create_dict()
 
-    # HTML LEVEL GOES HERE:
     with open(filename, encoding="utf8") as f:
         read_data = f.read()
     soup = BeautifulSoup(read_data, 'html.parser')
 
     cycle = update_dict_and_get_cycle(pieces_to_ints, soup)
 
+    # this happens after update_dict and not before in order to get proper cycle numbers
     board = fetch_board_state(soup)
 
-    BOARD_DIMENSIONS = 4
     final_pieces = []
+    board_size = len(board)
 
-    add_active_piece(soup, final_pieces, BOARD_DIMENSIONS)
-
-    add_other_shape_pieces(soup, final_pieces, BOARD_DIMENSIONS)
+    add_active_piece(soup, final_pieces, board_size)
+    add_other_shape_pieces(soup, final_pieces, board_size)
 
     return board, final_pieces, cycle
 
@@ -37,7 +36,7 @@ def create_dict():
 
 def update_dict_and_get_cycle(pieces_to_ints, soup):
     cycle_images = soup.select(
-        '#content > table > tbody > tr > td.content > center:nth-of-type(2) > table > tbody > tr > td > table > tbody > tr')
+        'td.content > center:nth-of-type(2) > table > tbody > tr > td > table > tbody > tr')
 
     # string format of all the different cycle images
     picturetypes = str(cycle_images)
@@ -60,8 +59,7 @@ def update_dict_and_get_cycle(pieces_to_ints, soup):
 
 
 def fetch_board_state(soup):
-    board_html = soup.select('#content > table > tbody > tr > td.content > table > tbody tr')
-
+    board_html = soup.select('td.content > table > tbody  tr')
     board = []
 
     for row in board_html:
@@ -70,14 +68,13 @@ def fetch_board_state(soup):
 
     board = tuple(board)
 
-
     return board
 
 
-def add_active_piece(soup, final_pieces, BOARD_DIMENSIONS):
+def add_active_piece(soup, final_pieces, board_size):
     #  need to get ACTIVE SHAPE separately
     active_shape_rows = soup.select(
-        '#content > table > tbody > tr > td.content > center:nth-of-type(3) > table > tbody > tr > td > table > tbody > tr')
+        'td.content > center:nth-of-type(3) > table > tbody > tr > td > table > tbody > tr')
 
     cur_piece = []
     cp_dim = [0, 0]
@@ -90,17 +87,19 @@ def add_active_piece(soup, final_pieces, BOARD_DIMENSIONS):
             else:
                 cur_row.append(0)
         cp_dim[0] = max(cp_dim[0], len(cur_row))
-        cur_row.extend((0,) * (BOARD_DIMENSIONS - len(cur_row)))
+        cur_row.extend((0,) * (board_size - len(cur_row)))
         cur_piece.append(tuple(cur_row))
     cp_dim[1] = max(cp_dim[1], len(cur_piece))
-    cur_piece.extend([(0,) * BOARD_DIMENSIONS for _ in range(BOARD_DIMENSIONS - len(cur_piece))])  # add empty row(s)
+    cur_piece.extend([(0,) * board_size for _ in range(board_size - len(cur_piece))])  # add empty row(s)
     final_pieces.append(tuple((cp_dim, cur_piece)))
 
 
-def add_other_shape_pieces(soup, final_pieces, BOARD_DIMENSIONS):
+def add_other_shape_pieces(soup, final_pieces, board_size):
     shapes = soup.select(
-        '#content > table > tbody > tr > td.content > center:nth-of-type(3) > center > table > tbody > tr > td')
+        'td.content > center:nth-of-type(3) > center > table > tbody ')
+    print(shapes)
 
+    print(len(shapes))
     for shape in shapes:
         cur_piece = []
         cp_dim = [0, 0]
@@ -116,17 +115,15 @@ def add_other_shape_pieces(soup, final_pieces, BOARD_DIMENSIONS):
             cp_dim[0] = max(cp_dim[0], len(cur_row))
 
             # piece dimensions
-            cur_row.extend((0,) * (BOARD_DIMENSIONS - len(cur_row)))
+            cur_row.extend((0,) * (board_size - len(cur_row)))
             cur_piece.append(tuple(cur_row))
         cp_dim[1] = max(cp_dim[1], len(cur_piece))
 
         # add empty row(s)
-        cur_piece.extend([(0,) * BOARD_DIMENSIONS for _ in range(BOARD_DIMENSIONS - len(cur_piece))])
+        cur_piece.extend([(0,) * board_size for _ in range(board_size - len(cur_piece))])
 
         final_pieces.append(tuple((cp_dim, cur_piece)))
-
     final_pieces = tuple(tuple(tuple(row) for row in piece) for piece in final_pieces)
-
 
 def test_shapeshifter_html(filename):
     board, pieces, cycle = get_shapeshifter_config(filename)
@@ -150,4 +147,8 @@ def test_shapeshifter_html(filename):
 
 # uncomment to test this file
 test_shapeshifter_html('htmllevels/defaultlevel.txt')
-# get_shapeshifter_config('htmllevels/level1.txt')
+print('=============================')
+print('=============================')
+print('=============================')
+print('=============================')
+test_shapeshifter_html('htmllevels/level1.txt')
