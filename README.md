@@ -1,9 +1,10 @@
 # ShapeshifterHtml
 Using A* to solve Neopet's Shapeshifter Game.
 
-The goal is to use all the rotation pieces to make the entire board the goal picture.
-
 Still looking for better heuristics, and optimizing speed. (It gets pretty slow when the board is large enough)
+
+## How to Play
+The goal is to use all the rotation pieces to make the entire board the goal picture.
 
 <img src="https://i.imgur.com/uqD0tvT.png" height="50%" width="50%">
 
@@ -25,7 +26,7 @@ password: algorithm123
 Open Terminal, or whatever you have python on and run `python shapeshifter.py` or `python3 shapeshifter.py` or whatever floats your boat
 
 ### Using your own levels
-While collecting html puzzles, it occurred to me that the puzzle actually dynamically changes. To replace the puzzle, just inspect the element and select 'edit as html', and save the contents as `something.html`
+While collecting html puzzles, it occurred to me that the puzzle actually dynamically changes (the levels are not necessarily identical each time you play). To replace the puzzle, just inspect the element and select 'edit as html', and save the contents as `something.html`
 
 Example: 
 
@@ -36,10 +37,14 @@ Inside shapeshifter.py, you just change the html file listed in
 
 ```gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level4.html')```
 
+If you are curious what the gameboard, pieces, cycle, or goal is, you can print it out before hand by inserting
+
+```shapeshifter_html.print_shapeshifter_html('htmllevels/level4.html')```
+
 ## Understanding the code
 
 ### HTML Parser
-We are fetching the board through html parsing, and saving it to a txt file via `shapeshifter_html.py`
+We are fetching the board through html parsing via `shapeshifter_html.py` and feeding the returned variables into a `ShapeShifterSearchProblem` object
 
 ### Search Heuristics
 
@@ -47,7 +52,29 @@ We are using Berkeley AI's skeleton (CS188) for A* search in `search.py` and the
 
 We originally received the skeleton code from Georgia Tech's CS3600 class and implemented it ourselves. 
 
-For all our heuristics we tested it on the "hard coded" level in `search.py`
+For all our heuristics we tested it on the "hard coded" level in `shapeshifter.py`
+
+```
+    # uncomment for hardcoded level
+    '''
+    pieces = (
+        ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+        ((2, 2), ((1, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+        ((3, 3), ((1, 0, 1, 0), (1, 0, 1, 0), (1, 1, 1, 0), (0, 0, 0, 0))),
+        ((3, 3), ((1, 0, 0, 0), (1, 1, 1, 0), (0, 0, 1, 0), (0, 0, 0, 0))),
+        ((2, 2), ((1, 0, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+        ((2, 3), ((1, 1, 0, 0), (0, 1, 0, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+        ((3, 3), ((1, 1, 0, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
+        ((3, 2), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+        ((3, 3), ((1, 0, 1, 0), (1, 1, 1, 0), (1, 0, 1, 0), (0, 0, 0, 0))),
+        ((2, 1), ((1, 1, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0))),
+        ((3, 3), ((0, 1, 0, 0), (1, 1, 1, 0), (0, 1, 0, 0), (0, 0, 0, 0)))
+    )
+    gamemap = ((2, 1, 0, 0),(1, 0, 1, 0),(2, 2, 0, 0),(0, 0, 0, 0))
+    cycle = [0,1,2]
+    goalpiece = 0
+    '''
+```
 
 #### Heuristic 1: Blind equidistance from goal state
 
@@ -74,6 +101,7 @@ Nodes Expanded on Test Case: 13691
 
 ## Built With
 * [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) - HTML Parser for Python
+* [CS188 Skeleton](http://ai.berkeley.edu/search.html) - Berkeley AI Pacman homework assignment skeleton
 
 ## Authors
 
