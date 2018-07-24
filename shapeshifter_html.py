@@ -122,7 +122,7 @@ def add_pieces(soup, final_pieces, board_size):
     final_pieces = tuple(tuple(tuple(row) for row in piece) for piece in final_pieces)
     return final_pieces
 
-def test_shapeshifter_html(filename):
+def print_shapeshifter_html(filename):
     board, pieces, cycle, goalpiece = get_shapeshifter_config(filename)
     #Print Board
     print("Board: ")

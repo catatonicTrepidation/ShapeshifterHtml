@@ -15,12 +15,15 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         return self.startState
 
     def isGoalState(self, state):
+        if len(state[0]) != 0:
+            return False
+        # no more pieces
         for row in state[1]:
             for c in row:
                 if c != self.goal_rank:
                     return False
 
-        return len(state[0]) == 0
+        return True
 
     def getSuccessors(self, state):
         """
@@ -62,7 +65,6 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         """
         Returns the cost of a particular sequence of actions.
         This is how the heuristic costs are implemented.
-        If those actions include an illegal move, return a hefty number.
         """
         return len(actions)
 
@@ -75,17 +77,22 @@ def heuristic1(state, problem):
 # see how close it is to the mod of the total number of state
 # TODO: 7 is hard coded due to 4 corners and 3 states. Should fix this in future
 def heuristic2(state, problem):
+    """
+        Node Counters
+        3 = 44198
+        6 = 39248
+        7 = 13691
+        8 = 39444
+        9 = 47419
+    """
+
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
 
     htotal = 0
 
+    #TODO: Dynamic Programming to stash htotal
 
-    #3 = 44198
-    #6 = 39248
-    #7 = 13691
-    #8 = 39444
-    #9 = 47419
     if (len(piecesleft) > 7):
     #you can only rotate the four corners up to 2 times, so anything greater defeats this precision
         for x in gamemap:
@@ -106,8 +113,10 @@ def heuristic2(state, problem):
 
     #print out every time there is a super close solutions
     if (htotal) < 2:
-        print('Close Gamemap: ', gamemap)
-
+        print('Close Gamemap: ')
+        for row in gamemap:
+            print(row)
+        print()
     return htotal
 
 # attempted corner heuristic (doesn't work)
@@ -127,7 +136,12 @@ def heuristic3(state, problem):
 
 if __name__ == "__main__":
     import shapeshifter_html
-    gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level3.html')
+
+    # INSERT HTML LEVEL HERE
+    # this prints the game state
+    # shapeshifter_html.print_shapeshifter_html('htmllevels/level5.html')
+    # this gets the pieces
+    gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level5.html')
 
     # uncomment for hardcoded level
     '''
@@ -149,11 +163,7 @@ if __name__ == "__main__":
     goalpiece = 0
     '''
 
-
     startState = (pieces, gamemap)
-
-    # print('Cycle: ", cycle)
-    # print('Start State: ',startState)
 
     problem = ShapeShifterSearchProblem(startState, cycle=cycle, goal=goalpiece)
     path = search.aStarSearch(problem, heuristic=heuristic2)
