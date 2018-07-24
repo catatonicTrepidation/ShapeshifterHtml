@@ -2,9 +2,10 @@
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
 import search
 
+
 class ShapeShifterSearchProblem(search.SearchProblem):
-    def __init__(self,startState,cycle, goal):
-        self.startState = startState
+    def __init__(self, start_state, cycle, goal):
+        self.startState = start_state
         self.numranks = len(cycle)
         self._expanded = 0
         self.cycle = cycle
@@ -14,9 +15,6 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         return self.startState
 
     def isGoalState(self, state):
-        #print 'isGoalState: state =',state
-        # if (len(state[1])**2)%(len(state[1])**2 + sum([sum(row) for row in state[1]])) == 0:
-        #     print('state =', state)
         for row in state[1]:
             for c in row:
                 if c != self.goal_rank:
@@ -34,7 +32,8 @@ class ShapeShifterSearchProblem(search.SearchProblem):
         numranks = self.numranks
         piecesleft, gamemap = state
 
-        if len(piecesleft) == 0: return []
+        if len(piecesleft) == 0:
+            return []
 
         piecesleft = list(piecesleft)
         successors = []
@@ -48,7 +47,7 @@ class ShapeShifterSearchProblem(search.SearchProblem):
             for i in range(mapwidth - piecewidth + 1):
                 newmap = [list(row) for row in gamemap]
 
-                #"increment" and rotate the image
+                # "increment" and rotate the image
                 for n in range(pieceheight):
                     for m in range(piecewidth):
                         newmap[n + j][m + i] = (newmap[n + j][m + i] + piece[n][m]) % numranks
@@ -69,13 +68,13 @@ class ShapeShifterSearchProblem(search.SearchProblem):
 
 
 # lower costs the closer it is to the solution
-def shapeshifterHeuristic1(state, problem):
+def heuristic1(state, problem):
     # return sum(sum([(y - problem.goal_rank) for y in x]) for x in gamemap)
     return sum(sum([bool(y != problem.goal_rank) for y in x]) for x in gamemap)
 
 # see how close it is to the mod of the total number of state
 # TODO: 7 is hard coded due to 4 corners and 3 states. Should fix this in future
-def shapeshifterHeuristic2(state, problem):
+def heuristic2(state, problem):
     # change to sum of differences between goal_rank and cur_rank of each square?
     piecesleft, gamemap = state
 
@@ -112,7 +111,7 @@ def shapeshifterHeuristic2(state, problem):
     return htotal
 
 # attempted corner heuristic (doesn't work)
-def shapeshifterHeuristic3(state, problem):
+def heuristic3(state, problem):
     piecesleft, gamemap = state
 
     topleftcorner = gamemap[0][0]
@@ -127,11 +126,10 @@ def shapeshifterHeuristic3(state, problem):
 
 
 if __name__ == "__main__":
-    #*** Reads html ***#
     import shapeshifter_html
     gamemap, pieces, cycle, goalpiece = shapeshifter_html.get_shapeshifter_config('htmllevels/level3.html')
 
-    #uncomment for hardcoded level
+    # uncomment for hardcoded level
     '''
     pieces = (
         ((3, 3), ((0, 1, 1, 0), (0, 1, 1, 0), (1, 1, 0, 0), (0, 0, 0, 0))),
@@ -158,6 +156,6 @@ if __name__ == "__main__":
     # print('Start State: ',startState)
 
     problem = ShapeShifterSearchProblem(startState, cycle=cycle, goal=goalpiece)
-    path = search.aStarSearch(problem, heuristic=shapeshifterHeuristic2)
+    path = search.aStarSearch(problem, heuristic=heuristic2)
     print('Path =', path)
     print(problem._expanded, "nodes expanded")
