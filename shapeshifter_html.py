@@ -20,8 +20,7 @@ def get_shapeshifter_config(filename):
     final_pieces = []
     board_size = len(board)
 
-    add_active_piece(soup, final_pieces, board_size)
-    final_pieces = add_other_shape_pieces(soup, final_pieces, board_size)
+    final_pieces = add_pieces(soup, final_pieces, board_size)
 
     #print(final_pieces)
     return board, final_pieces, cycle, goalpiece
@@ -89,37 +88,13 @@ def fetch_board_state(soup):
 
     return board
 
-
-def add_active_piece(soup, final_pieces, board_size):
-    #  need to get ACTIVE SHAPE separately
-    active_shape_rows = soup.select(
-        'td.content > center:nth-of-type(3) > table > tbody > tr > td > table > tbody > tr')
-
-    cur_piece = []
-    cp_dim = [0, 0]
-    for pr in active_shape_rows:
-        cur_row = []
-        td_list = BeautifulSoup(str(pr), 'html.parser').findAll('td', recursive=True)
-        for td in td_list:
-            if 'img' in str(td):
-                cur_row.append(1)
-            else:
-                cur_row.append(0)
-        cp_dim[0] = max(cp_dim[0], len(cur_row))
-        cur_row.extend((0,) * (board_size - len(cur_row)))
-        cur_piece.append(tuple(cur_row))
-    cp_dim[1] = max(cp_dim[1], len(cur_piece))
-    cur_piece.extend([(0,) * board_size for _ in range(board_size - len(cur_piece))])  # add empty row(s)
-    final_pieces.append(tuple((cp_dim, cur_piece)))
-
-
-def add_other_shape_pieces(soup, final_pieces, board_size):
+def add_pieces(soup, final_pieces, board_size):
     #border="0", cellpadding="0", cellspacing="0"
     tables = soup.find_all(attrs={"border": 0, "cellpadding": 0, "cellspacing": 0})
 
     # 1st piece is javascript table logic for the game board
     # 2nd piece is current piece
-    shapes = tables[2:]
+    shapes = tables[1:]
 
     for shape in shapes:
         cur_piece = []
