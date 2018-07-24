@@ -152,14 +152,12 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             # print "visited", visitedStates
 
 
-            # i[] = (coordinate, direction, stepCost)
-
-            if (problem.isGoalState(state)):
+            if problem.isGoalState(state):
                 # print "final sol1: ", solution;
                 return solution
 
-            newSet = problem.getSuccessors(state)
-            for currentstate, step, cost in newSet:
+            newset = problem.getSuccessors(state)
+            for currentstate, step, cost in newset:
                 if currentstate not in visitedStates:
 
                     listToFetch.push((currentstate, solution + [step]),
